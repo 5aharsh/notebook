@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook</title>
+</head>
+<body>
+    <div id="notepad" contenteditable="true">{{ content|safe }}</div>
+
+    <script>
+        const notepad = document.querySelector("#notepad");
+        const config = { attributes: true, childList: true, subtree: true, characterData: true };
+
+        const callback = (mutationList, observer) => {
+            for (const mutation of mutationList) {
+                var bodyData = {
+                    'data': notepad.innerHTML
+                }
+                fetch('/refresh',
+                    {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(bodyData)
+                    }
+                ).then((response)=> {
+                    if(response.ok){
+                        console.log("Saving...");
+                    } else {
+                        console.log("Error while saving");
+                    }
+                })
+            }
+        };
+        const observer = new MutationObserver(callback);
+        observer.observe(notepad, config);
+    </script>
+</body>
+</html>
