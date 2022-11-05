@@ -29,17 +29,19 @@
     <div id="showcase">
         <ul id="notebooks">
         {% for note in notebook %}
-        <li>{{ note[title] }}</li>
+        <li><a href="/notebook/{{ note }}">{{ notebook[note][title] }}</a></li>
         {% endfor %}
         </ul>
     </div>
     <script>
         var create_btn = document.querySelector("#create-btn");
-        var showcase = document.querySelector("#notebooks");
+        var notebooks = document.querySelector("#notebooks");
         create_btn.addEventListener("click", (e) => {
             var title = document.querySelector("#title").value;
             if (title.trim()) {
+                var id = Date.now().toString()+(Math.floor(Math.random()*10000)).toString();
                 var bodyData = {
+                    "id": id,
                     "title": title
                 };
                 fetch("/add", {
@@ -49,15 +51,22 @@
                     },
                     body: JSON.stringify(bodyData)
                 }).then((response)=> {
-                    if(response.ok){
-                        console.log("Added new notebook");
-                        showcase.append(title);
-                    } else {
-                        console.log("Error while creating notebook");
+                    return response.json();
+                }).then((json)=>{
+                    if(json['status']=='success'){
+                        // add new block here
+                        console.log("Note created");
+                        notebooks.appendChild(addNote(id, title));
                     }
                 });
             }
         });
+
+        let addNote = (id, title)=>{
+            var li = document.createElement("li");
+            li.innerHTML = `<a href="/notebook/${id}">${title}</a>`;
+            return li;
+        };
     </script>
 </body>
 
