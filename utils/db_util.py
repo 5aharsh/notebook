@@ -8,24 +8,24 @@ def init_db():
         set_db(DB_SCHEMA)
 
 
-def add_note(id, title):
+def add_note(notebook_id, title):
     db = get_db()
-    db[id] = {
+    db[notebook_id] = {
         TITLE: title,
         CONTENT: ""
     }
     return set_db(db)
 
 
-def update_content(id, content):
+def update_content(notebook_id, content):
     db = get_db()
-    db[id][CONTENT]=content
+    db[notebook_id][CONTENT]=content
     return set_db(db)
 
 
-def get_content(id):
+def get_content(notebook_id):
     db = get_db()
-    return db[id][CONTENT]
+    return db[notebook_id][TITLE], db[notebook_id][CONTENT]
 
 
 def get_db():
@@ -43,8 +43,8 @@ def set_db(db):
         return False
 
 
-def getID(id):
+def getID(notebook_id):
     try:
-        return int(id)
+        return int(notebook_id)
     except:
         return False

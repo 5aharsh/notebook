@@ -28,15 +28,18 @@
     </style>
 </head>
 <body>
+    <h1>{{ title }}</h1>
     <div id="notepad" contenteditable="true">{{ content|safe }}</div>
 
     <script>
         const notepad = document.querySelector("#notepad");
         const config = { attributes: true, childList: true, subtree: true, characterData: true };
+        const notebook_id = '{{ id }}';
 
         const callback = (mutationList, observer) => {
             for (const mutation of mutationList) {
                 var bodyData = {
+                    'id': notebook_id,
                     'data': notepad.innerHTML
                 }
                 fetch('/refresh',
