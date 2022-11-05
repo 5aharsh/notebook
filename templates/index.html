@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notebook - Home</title>
+    <style>
+        body,
+        html {
+            background: rgb(22, 21, 21);
+            color: rgb(238, 234, 234);
+            font-family: 'Georgia', Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="new">
+        <input type="text" name="title" id="title">
+        <input type="button" value="Create" id="create-btn">
+    </div>
+    <div id="showcase">
+        <ul id="notebooks">
+        {% for note in notebook %}
+        <li>{{ note[title] }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    <script>
+        var create_btn = document.querySelector("#create-btn");
+        var showcase = document.querySelector("#notebooks");
+        create_btn.addEventListener("click", (e) => {
+            var title = document.querySelector("#title").value;
+            if (title.trim()) {
+                var bodyData = {
+                    "title": title
+                };
+                fetch("/add", {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bodyData)
+                }).then((response)=> {
+                    if(response.ok){
+                        console.log("Added new notebook");
+                        showcase.append(title);
+                    } else {
+                        console.log("Error while creating notebook");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
