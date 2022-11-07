@@ -7,16 +7,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Notebook - Home</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
+
         body,
         html {
             background: rgb(22, 21, 21);
             color: rgb(238, 234, 234);
-            font-family: 'Georgia', Verdana, sans-serif;
+            font-family: 'Playfair Display', 'Georgia', Verdana, sans-serif;
             margin: 0;
             padding: 0;
             position: relative;
             height: 100%;
             width: 100%;
+        }
+
+        #create-container {
+            padding: 20px;
+            background: rgb(118, 88, 182);
         }
 
         #create {
@@ -30,13 +37,15 @@
             text-align: center;
         }
 
-        #create-title, #create-btn {
+        #create-title,
+        #create-btn {
             box-sizing: border-box;
             border: 0;
-            font-weight: bold;
-            font-size: 30px;
+            font-size: 25px;
             margin: none;
             outline: 0;
+            padding: 10px 5px;
+            font-family: 'Playfair Display', 'Georgia', Verdana, sans-serif;
         }
 
         #create-title {
@@ -45,23 +54,53 @@
         }
 
         #create-btn {
+            background-color: rgb(29, 158, 29);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 500;
             min-width: 150px;
             width: 15%;
         }
 
+        #notebooks {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+        #notebooks li {
+            box-sizing: border-box;
+            display: block;
+            margin: 0;
+            width: 100%;
+        }
+
+        #notebooks li a {
+            box-sizing: border-box;
+            background-color: rgb(216, 57, 57);
+            color: #fff;
+            display: block;
+            font-size: 25px;
+            padding: 20px;
+            text-decoration: none;
+            width: 100%;
+        }
     </style>
 </head>
 
 <body>
-    <div id="create">
-        <input type="text" name="title" id="create-title">
-        <input type="button" value="Create" id="create-btn">
+    <div id="create-container">
+        <div id="create">
+            <input type="text" name="title" id="create-title">
+            <input type="button" value="Create" id="create-btn">
+        </div>
     </div>
     <div id="showcase">
         <ul id="notebooks">
-        {% for note in notebook %}
-        <li><a href="/notebook/{{ note }}">{{ notebook[note][title] }}</a></li>
-        {% endfor %}
+            {% for note in notebook %}
+            <li><a href="/notebook/{{ note }}">{{ notebook[note][title] }}</a></li>
+            {% endfor %}
         </ul>
     </div>
     <script>
@@ -71,7 +110,7 @@
         create_btn.addEventListener("click", (e) => {
             var title = title_input.value;
             if (title.trim()) {
-                var id = Date.now().toString()+(Math.floor(Math.random()*10000)).toString();
+                var id = Date.now().toString() + (Math.floor(Math.random() * 10000)).toString();
                 var bodyData = {
                     "id": id,
                     "title": title
@@ -82,10 +121,10 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify(bodyData)
-                }).then((response)=> {
+                }).then((response) => {
                     return response.json();
-                }).then((json)=>{
-                    if(json['status']=='success'){
+                }).then((json) => {
+                    if (json['status'] == 'success') {
                         // add new block here
                         console.log("Note created");
                         notebooks.appendChild(addNote(id, title));
@@ -95,7 +134,7 @@
             }
         });
 
-        let addNote = (id, title)=>{
+        let addNote = (id, title) => {
             var li = document.createElement("li");
             li.innerHTML = `<a href="/notebook/${id}">${title}</a>`;
             return li;
