@@ -37,7 +37,7 @@ def get_db():
 def set_db(db):
     try:
         with open(DB_PATH, "w") as f:
-            json.dump(db, f, indent=2)    
+            json.dump(db, f, indent=2)
         return True
     except:
         return False

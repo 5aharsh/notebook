@@ -18,12 +18,43 @@
             height: 100%;
             width: 100%;
         }
+
+        #create {
+            box-sizing: border-box;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            text-align: center;
+        }
+
+        #create-title, #create-btn {
+            box-sizing: border-box;
+            border: 0;
+            font-weight: bold;
+            font-size: 30px;
+            margin: none;
+            outline: 0;
+        }
+
+        #create-title {
+            min-width: 500px;
+            width: 85%;
+        }
+
+        #create-btn {
+            min-width: 150px;
+            width: 15%;
+        }
+
     </style>
 </head>
 
 <body>
-    <div id="new">
-        <input type="text" name="title" id="title">
+    <div id="create">
+        <input type="text" name="title" id="create-title">
         <input type="button" value="Create" id="create-btn">
     </div>
     <div id="showcase">
@@ -36,8 +67,9 @@
     <script>
         var create_btn = document.querySelector("#create-btn");
         var notebooks = document.querySelector("#notebooks");
+        var title_input = document.querySelector("#create-title");
         create_btn.addEventListener("click", (e) => {
-            var title = document.querySelector("#title").value;
+            var title = title_input.value;
             if (title.trim()) {
                 var id = Date.now().toString()+(Math.floor(Math.random()*10000)).toString();
                 var bodyData = {
@@ -57,6 +89,7 @@
                         // add new block here
                         console.log("Note created");
                         notebooks.appendChild(addNote(id, title));
+                        title_input.value = "";
                     }
                 });
             }

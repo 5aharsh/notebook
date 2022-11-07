@@ -1,6 +1,4 @@
 from flask import Flask, request, render_template, jsonify
-import json
-import os
 
 from utils.constant import *
 from utils import db_util
@@ -42,4 +40,6 @@ def refresh():
 
 if __name__ == '__main__':
     db_util.init_db()
-    app.run()
+    app.jinja_env.auto_reload = True
+    app.config['TEMPLATES_AUTO_RELOAD'] = True
+    app.run(debug=True, host='0.0.0.0')
