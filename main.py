@@ -8,15 +8,22 @@ app = Flask(__name__)
 
 @app.route("/", methods=['GET'])
 def home():
-    db = db_util.get_db()
-    return render_template('index.html', notebook=db, title=TITLE)
+    try:
+        db = db_util.get_db()
+        return render_template('index.html', notebook=db, title=TITLE)
+    except:
+        return render_template('error.html', msg="Something went wrong...")
 
 
 @app.route("/notebook/<notebook_id>", methods=['GET'])
 def notebook(notebook_id):
-    title, content = db_util.get_content(notebook_id)
-    return render_template('notebook.html', title=title, content=content, id=notebook_id)
-
+    try:
+        title, content = db_util.get_content(notebook_id)
+        return render_template('notebook.html', title=title, content=content, id=notebook_id)
+    except KeyError as e:
+        return render_template('error.html', msg="Looks like requested notebook doesn't exist")
+    except:
+        return render_template('error.html', msg="Something went wrong...")
 
 @app.route("/add", methods=['POST'])
 def add():
@@ -30,9 +37,20 @@ def add():
 @app.route("/refresh", methods=['POST'])
 def refresh():
     try:
+        title = request.json["title"]
         text = request.json["data"]
         notebook_id = request.json["id"]
-        db_util.update_content(notebook_id, text)
+        db_util.update_content(notebook_id, title, text)
+        return jsonify({'status': 'success'})
+    except:
+        return jsonify({'status': 'failure'})
+
+
+
+@app.route("/delete/<notebook_id>", methods=['GET'])
+def delete(notebook_id):
+    try:
+        db_util.delete_note(notebook_id)
         return jsonify({'status': 'success'})
     except:
         return jsonify({'status': 'failure'})

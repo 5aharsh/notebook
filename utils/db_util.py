@@ -17,8 +17,15 @@ def add_note(notebook_id, title):
     return set_db(db)
 
 
-def update_content(notebook_id, content):
+def delete_note(notebook_id):
     db = get_db()
+    db.pop(notebook_id, None)
+    return set_db(db)
+
+
+def update_content(notebook_id, title, content):
+    db = get_db()
+    db[notebook_id][TITLE]=title
     db[notebook_id][CONTENT]=content
     return set_db(db)
 

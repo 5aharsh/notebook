@@ -5,9 +5,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notebook - Home</title>
+    <title>Home - Notebook</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&display=swap');
 
         body,
         html {
@@ -22,8 +22,8 @@
         }
 
         #create-container {
-            padding: 20px;
-            background: rgb(118, 88, 182);
+            padding: 20px 25px;
+            background: rgb(49, 64, 106);
         }
 
         #create {
@@ -34,7 +34,6 @@
             display: flex;
             flex-wrap: wrap;
             width: 100%;
-            text-align: center;
         }
 
         #create-title,
@@ -42,24 +41,33 @@
             box-sizing: border-box;
             border: 0;
             font-size: 25px;
-            margin: none;
+            margin: 5px 0;
             outline: 0;
             padding: 10px 5px;
             font-family: 'Playfair Display', 'Georgia', Verdana, sans-serif;
         }
 
         #create-title {
-            min-width: 500px;
-            width: 85%;
+            flex-grow: 1;
+            padding: 10px 20px;
+            width: 80%;
         }
 
         #create-btn {
             background-color: rgb(29, 158, 29);
             color: #fff;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 800;
+            flex-grow: 1;
             min-width: 150px;
-            width: 15%;
+        }
+
+        #showcase {
+            padding: 10px 40px;
+        }
+
+        #showcase h3 {
+            font-size: x-large;
         }
 
         #notebooks {
@@ -72,19 +80,38 @@
         #notebooks li {
             box-sizing: border-box;
             display: block;
-            margin: 0;
+            padding: 5px 0;
             width: 100%;
         }
 
         #notebooks li a {
+            border-bottom: 2px solid #fff;
             box-sizing: border-box;
-            background-color: rgb(216, 57, 57);
             color: #fff;
             display: block;
-            font-size: 25px;
-            padding: 20px;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 20px 20px;
             text-decoration: none;
+            text-shadow: 1px 1px 1px #000;
+            transition: all 0.5s ease;
             width: 100%;
+        }
+
+        #notebooks li a:hover {
+            padding-left: 40px;
+        }
+
+        #notebooks li:nth-child(3n+1) a:hover {
+            background: rgb(165, 58, 58);
+        }
+
+        #notebooks li:nth-child(3n-1) a:hover {
+            background: rgb(177, 190, 56);
+        }
+
+        #notebooks li:nth-child(3n) a:hover {
+            background: rgb(58, 119, 165);
         }
     </style>
 </head>
@@ -92,11 +119,13 @@
 <body>
     <div id="create-container">
         <div id="create">
-            <input type="text" name="title" id="create-title">
+            <input type="text" placeholder="New notebook title..." name="title" id="create-title">
             <input type="button" value="Create" id="create-btn">
         </div>
     </div>
+
     <div id="showcase">
+        <h3>Catalogue</h3>
         <ul id="notebooks">
             {% for note in notebook %}
             <li><a href="/notebook/{{ note }}">{{ notebook[note][title] }}</a></li>

@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Notebook</title>
+    <title>{{ title }} - Notebook</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;800&display=swap');
 
-        body, html {
+        body,
+        html {
+            display: flex;
+            flex-direction: column;
             margin: 0;
             padding: 0;
             position: relative;
@@ -18,27 +22,68 @@
             height: 100%;
         }
 
-        h1 {
-            padding: 0 20px;
+        #navigation {
+            display: flex;
+            flex-direction: row;
+        }
+
+        #navigation a {
+            box-sizing: border-box;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 600;
+            padding: 15px;
+            text-align:center;
+            text-decoration: none;
+            flex-grow: 1;
+        }
+
+        #navigation #back {
+            background-color: rgb(44, 178, 55);
+        }
+
+        #navigation #delete {
+            background-color: rgb(212, 29, 29);
+        }
+
+        h1#title {
+            padding: 20px 20px;
+            margin: 0;
         }
 
         #notepad {
+            background-color: rgb(59, 56, 56);
+            bottom: 0;
             box-sizing: border-box;
             display: block;
-            position: relative;
+            flex-grow: 2;
+            font-size: 18px;
             width: 100%;
-            height: 100%;
             margin: 0;
             padding: 20px;
         }
+
+        [contenteditable]:focus {
+            border: none;
+            outline: none;
+            caret-color: #fff;
+        }
     </style>
 </head>
+
 <body>
-    <h1>{{ title }}</h1>
+    <div id="navigation">
+        <a href="/" id="back">Catalogue</a>
+        <a href="javascript:void(0)" id="delete">Delete</a>
+    </div>
+    <h1 id="title" contenteditable="true">{{ title }}</h1>
     <div id="notepad" contenteditable="true">{{ content|safe }}</div>
 
     <script>
+        const title = document.querySelector("#title");
         const notepad = document.querySelector("#notepad");
+        const deleteBtn = document.querySelector("#delete");
+        const titleConfig = { attributes: true, childList: true, subtree: true, characterData: true };
         const config = { attributes: true, childList: true, subtree: true, characterData: true };
         const notebook_id = '{{ id }}';
 
@@ -46,6 +91,7 @@
             for (const mutation of mutationList) {
                 var bodyData = {
                     'id': notebook_id,
+                    'title': title.innerText,
                     'data': notepad.innerHTML
                 }
                 fetch('/refresh',
@@ -56,17 +102,35 @@
                         },
                         body: JSON.stringify(bodyData)
                     }
-                ).then((response)=> {
+                ).then((response) => {
                     if (response.ok) {
                         console.log("Saving...");
                     } else {
                         console.log("Error while saving");
                     }
-                })
+                });
             }
         };
         const observer = new MutationObserver(callback);
+        observer.observe(title, titleConfig);
         observer.observe(notepad, config);
+        
+        deleteBtn.addEventListener("click", ()=>{
+            if(confirm("Are you sure you want to delete this notebook?")){
+                fetch("/delete/"+notebook_id)
+                .then((response) => {
+                    return response.json();
+                }).then((json)=> {
+                    if(json['status']=='success') {
+                        alert("Note successfully delete");
+                        window.location="/";
+                    } else {
+                        alert("Error while deleting");
+                    }
+                });
+            }
+        });
     </script>
 </body>
+
 </html>
