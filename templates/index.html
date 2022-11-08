@@ -125,7 +125,10 @@
     </div>
 
     <div id="showcase">
-        <h3>Catalogue</h3>
+        <h3>Catalogue:</h3>
+        {% if notebook|length == 0 %}
+        <p id="helptext" style="color: rgb(198, 194, 194); font-style: italic;">Nothing here at the moment... Start with creating a Notebook</p>
+        {% endif %}
         <ul id="notebooks">
             {% for note in notebook %}
             <li><a href="/notebook/{{ note }}">{{ notebook[note][title] }}</a></li>
@@ -136,6 +139,7 @@
         var create_btn = document.querySelector("#create-btn");
         var notebooks = document.querySelector("#notebooks");
         var title_input = document.querySelector("#create-title");
+        var helptext = document.querySelector("#helptext");
         create_btn.addEventListener("click", (e) => {
             var title = title_input.value;
             if (title.trim()) {
@@ -158,6 +162,9 @@
                         console.log("Note created");
                         notebooks.appendChild(addNote(id, title));
                         title_input.value = "";
+                        if(helptext){
+                            helptext.remove();
+                        }
                     }
                 });
             }
